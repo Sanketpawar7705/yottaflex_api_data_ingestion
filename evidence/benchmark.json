@@ -1,0 +1,19 @@
+{
+  "source_records": 101516,
+  "page_size": 1000,
+  "baseline_sql_lookup": {
+    "customer_lookup": "sql",
+    "status": "success",
+    "received": 101516,
+    "seconds": 2.6,
+    "records_per_second": 39045
+  },
+  "optimised_memory_lookup": {
+    "customer_lookup": "memory",
+    "status": "success",
+    "received": 101516,
+    "seconds": 2.766,
+    "records_per_second": 36701
+  },
+  "speedup": 0.94
+}

@@ -1,0 +1,50 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.7.0 -- /tmp/uvenv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/fixed/yottaflex_api_ingestion
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 39 items
+
+tests/test_pipeline.py::test_client_does_not_retry_auth_errors PASSED    [  2%]
+tests/test_pipeline.py::test_client_backs_off_exponentially_then_gives_up PASSED [  5%]
+tests/test_pipeline.py::test_full_load_matches_expected_labels PASSED    [  7%]
+tests/test_pipeline.py::test_empty_batch PASSED                          [ 10%]
+tests/test_pipeline.py::test_malformed_null_and_missing_records_are_quarantined PASSED [ 12%]
+tests/test_pipeline.py::test_boundary_amounts_load_and_future_timestamp_cannot_poison_checkpoint PASSED [ 15%]
+tests/test_pipeline.py::test_exact_duplicates_are_loaded_once PASSED     [ 17%]
+tests/test_pipeline.py::test_newer_version_in_the_same_run_wins PASSED   [ 20%]
+tests/test_pipeline.py::test_out_of_order_older_version_is_kept_only_in_history PASSED [ 23%]
+tests/test_pipeline.py::test_rerun_of_same_input_changes_nothing PASSED  [ 25%]
+tests/test_pipeline.py::test_incremental_run_late_arrival_and_backfill PASSED [ 28%]
+tests/test_pipeline.py::test_rate_limit_and_transient_error_are_retried PASSED [ 30%]
+tests/test_pipeline.py::test_truncated_json_page_is_retried PASSED       [ 33%]
+tests/test_pipeline.py::test_partial_failure_then_restart PASSED         [ 35%]
+tests/test_pipeline.py::test_wrong_api_key_fails_the_run_cleanly PASSED  [ 38%]
+tests/test_pipeline.py::test_additive_new_field_is_tolerated_and_counted PASSED [ 41%]
+tests/test_pipeline.py::test_breaking_schema_change_stops_the_run_and_keeps_raw PASSED [ 43%]
+tests/test_pipeline.py::test_raw_pages_and_run_metrics_are_recorded PASSED [ 46%]
+tests/test_validation.py::test_valid_record_is_normalised PASSED         [ 48%]
+tests/test_validation.py::test_invalid_records[changes0-invalid_amount:not_numeric] PASSED [ 51%]
+tests/test_validation.py::test_invalid_records[changes1-invalid_amount:not_numeric] PASSED [ 53%]
+tests/test_validation.py::test_invalid_records[changes2-invalid_amount:not_numeric] PASSED [ 56%]
+tests/test_validation.py::test_invalid_records[changes3-invalid_amount:negative] PASSED [ 58%]
+tests/test_validation.py::test_invalid_records[changes4-invalid_amount:too_many_decimals] PASSED [ 61%]
+tests/test_validation.py::test_invalid_records[changes5-invalid_customer_ref] PASSED [ 64%]
+tests/test_validation.py::test_invalid_records[changes6-invalid_customer_ref] PASSED [ 66%]
+tests/test_validation.py::test_invalid_records[changes7-invalid_status] PASSED [ 69%]
+tests/test_validation.py::test_invalid_records[changes8-invalid_currency] PASSED [ 71%]
+tests/test_validation.py::test_invalid_records[changes9-invalid_event_id] PASSED [ 74%]
+tests/test_validation.py::test_invalid_records[changes10-invalid_timestamp:event_time] PASSED [ 76%]
+tests/test_validation.py::test_invalid_records[changes11-invalid_timestamp:updated_at] PASSED [ 79%]
+tests/test_validation.py::test_invalid_records[changes12-future_timestamp:updated_at] PASSED [ 82%]
+tests/test_validation.py::test_non_object_is_malformed[text] PASSED      [ 84%]
+tests/test_validation.py::test_non_object_is_malformed[None] PASSED      [ 87%]
+tests/test_validation.py::test_non_object_is_malformed[5] PASSED         [ 89%]
+tests/test_validation.py::test_non_object_is_malformed[bad3] PASSED      [ 92%]
+tests/test_validation.py::test_missing_required_field PASSED             [ 94%]
+tests/test_validation.py::test_boundary_amounts_are_accepted PASSED      [ 97%]
+tests/test_validation.py::test_extra_field_is_tolerated_and_reported PASSED [100%]
+
+============================== 39 passed in 1.21s ==============================

@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "every successful run: received = inserted + updated + duplicates + late_ignored + rejected",
+      "passed": true,
+      "detail": "all runs balance"
+    },
+    {
+      "check": "referential integrity: every event has a customer",
+      "passed": true,
+      "detail": "orphans=0"
+    },
+    {
+      "check": "events holds exactly one row per event in history",
+      "passed": true,
+      "detail": "events=231 history_distinct=231"
+    },
+    {
+      "check": "events always holds the newest version",
+      "passed": true,
+      "detail": "stale=0"
+    },
+    {
+      "check": "every reject is traceable to a retained raw response",
+      "passed": true,
+      "detail": "untraceable=0"
+    },
+    {
+      "check": "raw responses match their SHA-256",
+      "passed": true,
+      "detail": "ok"
+    },
+    {
+      "check": "labels: distinct valid events",
+      "passed": true,
+      "detail": "actual=231 expected=231"
+    },
+    {
+      "check": "labels: SUM(amount_minor)",
+      "passed": true,
+      "detail": "actual=28561 expected=28561"
+    },
+    {
+      "check": "labels: rejects by category",
+      "passed": true,
+      "detail": "actual={'future_timestamp': 3, 'invalid_amount': 5, 'invalid_customer_ref': 2, 'invalid_timestamp': 3, 'missing_field': 3} expected={'future_timestamp': 3, 'missing_field': 3, 'invalid_timestamp': 3, 'invalid_amount': 5, 'invalid_customer_ref': 2}"
+    },
+    {
+      "check": "labels: counters of the first full run",
+      "passed": true,
+      "detail": "match"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "f7eafe45-27a1-490b-ab4b-2f2e6c14932c",
+      "status": "success",
+      "started_at": "2026-11-07T04:52:44Z",
+      "received": 254,
+      "inserted": 231,
+      "updated": 1,
+      "duplicates": 4,
+      "late_ignored": 2,
+      "rejected": 16,
+      "retries": 0,
+      "rate_limited": 0,
+      "error": null
+    },
+    {
+      "run_id": "e04b006a-d31b-45d9-829b-306abaa99dc4",
+      "status": "success",
+      "started_at": "2026-11-07T04:52:44Z",
+      "received": 64,
+      "inserted": 0,
+      "updated": 0,
+      "duplicates": 57,
+      "late_ignored": 0,
+      "rejected": 7,
+      "retries": 0,
+      "rate_limited": 0,
+      "error": null
+    }
+  ]
+}

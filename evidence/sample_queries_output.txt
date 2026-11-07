@@ -1,0 +1,31 @@
+== Run history ==
+run | status | received | inserted | updated | duplicates | late_ignored | rejected | retries
+f7eafe45 | success | 254 | 231 | 1 | 4 | 2 | 16 | 0
+e04b006a | success | 64 | 0 | 0 | 57 | 0 | 7 | 0
+
+== Rejects by category ==
+category | n | times_seen
+invalid_amount | 5 | 2
+missing_field | 3 | 2
+invalid_timestamp | 3 | 2
+future_timestamp | 3 | 2
+invalid_customer_ref | 2 | 2
+
+== Events by status ==
+status | n | total
+cancelled | 76 | 95.76
+completed | 77 | 97.33
+pending | 78 | 92.52
+
+== History: events with more than one version ==
+event_id | versions | group_concat(updated_at,' < ')
+EVT-0000083 | 2 | 2026-01-01T01:21:00Z < 2026-01-01T01:22:00Z
+EVT-0000166 | 2 | 2026-01-01T02:45:00Z < 2026-01-01T02:46:00Z
+EVT-0000249 | 2 | 2026-01-01T04:07:00Z < 2026-01-01T04:08:00Z
+
+== Trace a reject to its raw page ==
+reason | event_id | source_file | sha
+future_timestamp:updated_at | EVT-0000068 | f7eafe45-27a1-490b-ab4b-2f2e6c14932c/records/page_0001 | 44ac7ce320bc
+missing_field:currency | EVT-0000072 | f7eafe45-27a1-490b-ab4b-2f2e6c14932c/records/page_0001 | 44ac7ce320bc
+invalid_timestamp:event_time | EVT-0000074 | f7eafe45-27a1-490b-ab4b-2f2e6c14932c/records/page_0001 | 44ac7ce320bc
+
