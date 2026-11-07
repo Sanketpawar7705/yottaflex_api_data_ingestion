@@ -1,63 +1,65 @@
 # YottaFlex API Data Ingestion Pipeline
 
-<p align="center">
-  <strong>A reliable, incremental API data ingestion system built with Python and SQLite.</strong>
-</p>
+A Python-based API data ingestion pipeline that retrieves data from an authenticated REST API, processes paginated responses, validates records, and stores the results in SQLite.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/FastAPI-Local%20Mock%20API-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
-  <img src="https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
-  <img src="https://img.shields.io/badge/Pytest-Testing-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest">
-</p>
+The project focuses on reliable data ingestion, error handling, duplicate prevention, incremental processing, and reconciliation reporting.
 
-<p align="center">
-  <a href="https://github.com/Sanketpawar7705/yottaflex_api_data_ingestion">GitHub Repository</a>
-</p>
+**GitHub Repository:** [yottaflex_api_data_ingestion](https://github.com/Sanketpawar7705/yottaflex_api_data_ingestion)
 
 ---
 
 ## 1. Project Overview
 
-This project was developed as part of the **YottaFlex AI Recruitment Drive Candidate Project**.
+The YottaFlex API Data Ingestion Pipeline is designed to collect data from an API and store it in a structured database.
 
-The objective is to build a practical API data ingestion pipeline that can retrieve data from an API, process it reliably, validate incoming records, and store the results in a local database.
+The pipeline handles the main stages of an ingestion workflow, including:
 
-The pipeline is designed around problems that commonly occur in real-world data integrations: paginated responses, temporary API failures, rate limits, duplicate records, invalid data, and events arriving out of order.
+- Authenticated API communication.
+- Paginated data retrieval.
+- Retry handling for temporary API failures.
+- Rate-limit handling.
+- Data validation and error handling.
+- Raw API response retention.
+- Duplicate detection and idempotent storage.
+- Incremental ingestion using checkpoints.
+- SQLite database storage.
+- Reconciliation reporting.
+- Automated testing and benchmarking.
 
-A local FastAPI mock API makes it possible to run and validate the complete workflow without depending on a paid external API.
+A mock API is included to provide a local environment for running and verifying the ingestion workflow.
 
-## 2. Key Features
+## 2. Project Objectives
 
-- **API authentication:** sends authenticated requests to the source API.
-- **Pagination:** retrieves records across multiple API pages.
-- **Retry handling:** retries selected temporary failures.
-- **Rate-limit handling:** handles HTTP 429 responses.
-- **Exponential backoff:** avoids repeatedly retrying a failing API too quickly.
-- **Data validation:** checks incoming records before database loading.
-- **Raw response retention:** keeps original API response data for traceability.
-- **Incremental ingestion:** uses checkpoints and a configurable lookback window.
-- **Idempotent processing:** prevents duplicate event versions from being inserted repeatedly.
-- **Late-arriving event handling:** prevents older event versions from replacing newer ones.
-- **SQLite storage:** stores customers, events, history, rejects, and ingestion metadata.
-- **Reconciliation:** checks whether the stored data is consistent.
-- **Automated tests:** verifies pipeline and validation behavior.
-- **Benchmarking:** compares database lookup approaches.
+The main objectives of this project are:
+
+1. Retrieve records from an authenticated API.
+2. Process API responses page by page.
+3. Handle temporary network and server errors.
+4. Validate incoming records before storing them.
+5. Prevent duplicate records during repeated ingestion.
+6. Retain raw API responses for traceability.
+7. Support incremental ingestion using checkpoints.
+8. Store processed information in SQLite.
+9. Generate reconciliation reports.
+10. Verify the application through automated tests.
 
 ## 3. Technology Stack
 
-| Technology | How it is used |
+| Technology | Purpose |
 |---|---|
-| Python | Application logic and data processing |
+| Python | Main programming language |
 | FastAPI | Local mock API |
-| Uvicorn | Local API server |
-| Requests | HTTP communication |
-| SQLite | Local database |
-| Pytest | Automated tests |
-| Git | Source-code version control |
-| GitHub | Public project repository |
+| Uvicorn | Running the mock API server |
+| Requests | HTTP API communication |
+| SQLite | Persistent data storage |
+| Pytest | Automated testing |
+| Pydantic | Data modelling and validation, where used |
+| Git | Version control |
+| GitHub | Source code repository |
 
 ## 4. Project Structure
+
+The repository is organised into application code, documentation, test cases, and supporting evidence.
 
 ```text
 yottaflex_api_data_ingestion/
@@ -96,172 +98,146 @@ yottaflex_api_data_ingestion/
 └── requirements.txt
 ```
 
-### Main application modules
+**Main application modules**
 
 | File | Responsibility |
 |---|---|
-| `app/config.py` | Reads application configuration |
-| `app/client.py` | Handles API requests, authentication, pagination and retries |
-| `app/mock_api.py` | Provides the local mock API and test scenarios |
-| `app/pipeline.py` | Coordinates the ingestion workflow |
-| `app/validation.py` | Validates incoming customer and event data |
-| `app/storage.py` | Manages SQLite storage and database operations |
-| `app/report.py` | Generates reconciliation reports |
-| `app/benchmark.py` | Runs the performance comparison |
+| `client.py` | Handles communication with the API |
+| `config.py` | Loads application configuration |
+| `mock_api.py` | Provides the local mock API |
+| `pipeline.py` | Coordinates the ingestion workflow |
+| `storage.py` | Handles SQLite database operations |
+| `validation.py` | Validates incoming records |
+| `report.py` | Generates reconciliation reports |
+| `benchmark.py` | Runs ingestion performance benchmarks |
 
-### Supporting files
+## 5. Application Architecture
 
-| File | Purpose |
-|---|---|
-| `docs/DATA_DICTIONARY.md` | Documents the database and data fields |
-| `docs/DESIGN_NOTES.md` | Explains technical decisions and design considerations |
-| `evidence/benchmark.json` | Sample benchmark output |
-| `evidence/sample_queries_output.txt` | Sample database query output |
-| `evidence/sample_reconciliation_report.json` | Sample reconciliation results in JSON |
-| `evidence/sample_reconciliation_report.md` | Human-readable reconciliation results |
-| `evidence/test_results.txt` | Saved test output |
-| `PROMPT_HISTORY.md` | AI-use disclosure and prompt history |
-| `.env.example` | Example local configuration |
-| `.gitignore` | Files excluded from version control |
-| `pytest.ini` | Pytest configuration |
-| `requirements.txt` | Python dependencies |
-
-## 5. Architecture
-
-The application follows a simple ingestion workflow:
+The pipeline follows a modular design in which API communication, validation, storage, and reporting are handled separately.
 
 ```text
-                DATA SOURCE
-                     |
-                     v
-              LOCAL MOCK API
-                  FastAPI
-                     |
-                     v
-                API CLIENT
-          Authentication / Pagination
-                     |
-                     v
-             RETRY MECHANISM
-          Backoff / Rate-limit Handling
-                     |
-                     v
-            RAW RESPONSE STORAGE
-                     |
-                     v
-              DATA VALIDATION
-                     |
-              +------+------+
-              |             |
-              v             v
-         VALID DATA     INVALID DATA
-              |             |
-              v             v
-          SQLITE DB      REJECTS
+                  Mock REST API
+                       |
+                       |
+                API Authentication
+                       |
+                       |
+                Paginated Requests
+                       |
+                       |
+                 Retry Handling
+                       |
+                       |
+                 Data Validation
+                       |
+              +--------+--------+
+              |                 |
+         Valid Records      Rejected Records
+              |                 |
+              |                 |
+         SQLite Storage     Reject Storage
               |
-              v
-        EVENT HISTORY
               |
-              v
-          CHECKPOINT
+       Raw Response Retention
               |
-              v
-       RECONCILIATION
               |
-              v
-        FINAL REPORT
+       Checkpoint Management
+              |
+              |
+       Reconciliation Report
 ```
 
-### Workflow explanation
+## 6. Data Ingestion Workflow
 
-1. The application reads its configuration.
-2. It connects to the local mock API.
-3. It authenticates API requests.
-4. It retrieves customer and event records.
-5. It processes paginated API responses.
-6. It retains the original response data.
-7. It validates incoming records.
-8. It stores invalid records with their rejection reasons.
-9. It inserts new event versions and updates current records when appropriate.
-10. It avoids inserting duplicate versions.
-11. It prevents older event versions from replacing newer versions.
-12. It advances the checkpoint after a successful complete run.
-13. It generates reconciliation results.
+The ingestion process follows these steps:
 
-## 6. Prerequisites
+1. Load the application configuration.
+2. Establish communication with the mock API.
+3. Authenticate API requests using the configured API key.
+4. Request records using pagination.
+5. Handle temporary API failures and retry eligible requests.
+6. Validate the retrieved records.
+7. Store raw API responses for traceability.
+8. Save valid records in the database.
+9. Handle invalid records separately.
+10. Maintain ingestion checkpoints.
+11. Generate reconciliation reports.
 
-Before running the project, install:
+## 7. Database Design
+
+SQLite is used as the persistent storage layer.
+
+The database contains tables for managing ingestion runs, API responses, customer information, events, historical records, rejected records, and checkpoints.
+
+| Table | Purpose |
+|---|---|
+| `runs` | Stores ingestion run information |
+| `raw_responses` | Retains raw API responses |
+| `customers` | Stores customer records |
+| `events` | Stores processed event records |
+| `events_history` | Maintains event history |
+| `rejects` | Stores records that fail validation |
+| `checkpoints` | Tracks ingestion progress |
+
+For detailed table definitions and field descriptions, refer to [DATA_DICTIONARY.md](docs/DATA_DICTIONARY.md).
+
+## 8. Requirements
+
+Before running the application, make sure the following software is installed:
 
 - Python 3.10 or later.
 - Git.
 - pip.
-- Windows PowerShell, Linux terminal, or macOS terminal.
+- Windows, Linux, or macOS.
+- Internet access only if installing dependencies or using an external API.
 
-The mock API and SQLite database run locally. No paid external API or hosted database is required.
+The included mock API can be run locally.
 
-## 7. Installation and Setup
+## 9. Installation and Setup
 
 ### Step 1: Clone the repository
 
-```bash
+```powershell
 git clone https://github.com/Sanketpawar7705/yottaflex_api_data_ingestion.git
 ```
 
-Move into the project directory:
+### Step 2: Open the project directory
 
-```bash
+```powershell
 cd yottaflex_api_data_ingestion
 ```
 
-### Step 2: Create a virtual environment
-
-**Windows PowerShell:**
+### Step 3: Create a virtual environment
 
 ```powershell
 python -m venv .venv
 ```
 
-Activate it:
+### Step 4: Activate the virtual environment
+
+For Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks script execution for the current terminal, run:
+### Step 5: Upgrade pip
 
 ```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\.venv\Scripts\Activate.ps1
-```
-
-**Linux/macOS:**
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### Step 3: Upgrade pip
-
-```bash
 python -m pip install --upgrade pip
 ```
 
-### Step 4: Install project dependencies
+### Step 6: Install project dependencies
 
-```bash
+```powershell
 python -m pip install -r requirements.txt
 ```
 
-Verify the installation:
+## 10. Configuration
 
-```bash
-python -m pip list
-```
+The repository includes `.env.example` as a reference for the application configuration.
 
-## 8. Configuration
-
-The project provides an `.env.example` file with the local configuration values:
+Example configuration:
 
 ```env
 API_BASE_URL=http://127.0.0.1:8000
@@ -273,9 +249,9 @@ LOOKBACK_SECONDS=3600
 MOCK_RECORD_COUNT=250
 ```
 
-### Windows PowerShell configuration
+The application configuration is read from environment variables. The example file is a template; it is not automatically loaded by Python.
 
-Set the variables in the terminal:
+For Windows PowerShell, configure the variables in the terminal where you will run the application:
 
 ```powershell
 $env:API_BASE_URL = "http://127.0.0.1:8000"
@@ -287,273 +263,295 @@ $env:LOOKBACK_SECONDS = "3600"
 $env:MOCK_RECORD_COUNT = "250"
 ```
 
-**Note:** These commands set environment variables for the current PowerShell session. If you open another terminal, activate the virtual environment and set the variables again. The `.env.example` file documents the values; it is not automatically loaded unless dotenv support is explicitly configured in the application.
+Create the local working directories:
 
-Do not commit real API credentials or private configuration files.
+```powershell
+New-Item -ItemType Directory -Force data
+New-Item -ItemType Directory -Force reports
+```
 
-## 9. Running the Application
+Use a different API token and appropriate configuration when connecting to another API.
 
-### Step 1: Start the local mock API
+## 11. Start the Mock API
 
-Open Terminal 1 from the project root:
+The project includes a mock API for local development and testing.
 
-```bash
+Start the API server:
+
+```powershell
 python -m app.mock_api serve --host 127.0.0.1 --port 8000
 ```
 
-Keep the server running.
+Keep this terminal running.
 
-### Step 2: Check API health
+### Verify the API
 
-Open Terminal 2, activate the virtual environment, set the configuration variables, and run:
+Open another PowerShell terminal, activate the virtual environment, and run:
 
 ```powershell
 Invoke-RestMethod -Uri "http://127.0.0.1:8000/health"
 ```
 
-The endpoint should return a successful health response.
+The API documentation can be accessed at:
 
-### Step 3: Open API documentation
-
-Open the following URL in a browser:
-
+```text
 http://127.0.0.1:8000/docs
+```
 
-The interactive documentation can be used to inspect available API endpoints.
+The mock API uses the configured API key for authenticated requests.
 
-### Step 4: Generate expected reconciliation labels
+## 12. Generate Expected Labels
 
-```bash
+Generate the expected labels used by the reconciliation process:
+
+```powershell
 python -m app.mock_api labels --count 250 --out data/expected_labels.json
 ```
 
-### Step 5: Execute the ingestion pipeline
+This creates a local reference file for comparing expected and ingested records.
 
-```bash
+## 13. Run the Ingestion Pipeline
+
+After starting the mock API and configuring the environment variables, run:
+
+```powershell
 python -m app.pipeline
 ```
 
-The pipeline fetches source records, validates them, writes the data to SQLite, records run statistics, and advances the checkpoint after a successful complete run.
+The pipeline executes the configured ingestion workflow and stores its data in the SQLite database.
 
-## 10. Running Automated Tests
+The default database path is:
 
-Run all tests:
-
-```bash
-python -m pytest -v
+```text
+data/ingestion.db
 ```
 
-Run a shorter summary:
+## 14. Generate Reconciliation Reports
 
-```bash
-python -m pytest -q
-```
+Run the reconciliation module:
 
-The test files are:
-
-- `tests/test_validation.py`
-- `tests/test_pipeline.py`
-
-The tests cover the implemented validation and pipeline behavior.
-
-Only report the number of passing tests after running the current version of the repository.
-
-## 11. Reconciliation Report
-
-After the pipeline has completed, run:
-
-```bash
+```powershell
 python -m app.report --db data/ingestion.db --labels data/expected_labels.json
 ```
 
-The application generates:
+The report files are generated in the `reports/` directory:
 
 ```text
 reports/
-    reconciliation_report.json
-    reconciliation_report.md
+├── reconciliation_report.json
+└── reconciliation_report.md
 ```
 
-The reconciliation process checks the consistency of ingested data, including record accounting, customer references, event versions, raw response traceability, and expected results when labels are supplied.
+The reports can be used to review the reconciliation results and identify differences between expected and ingested records.
 
-The sample reports committed in `evidence/` provide examples of the report format. They are sample evidence, not automatically proof of a fresh run.
+## 15. Run Automated Tests
 
-## 12. Performance Benchmark
+The project includes tests for the ingestion pipeline and validation logic.
 
-Run the benchmark:
+Run all tests:
 
-```bash
+```powershell
+python -m pytest -v
+```
+
+Run tests with a shorter output:
+
+```powershell
+python -m pytest -q
+```
+
+To save a fresh test execution log:
+
+```powershell
+python -m pytest -v 2>&1 | Tee-Object evidence\test_results.txt
+```
+
+The saved test log should reflect the actual execution result. Do not modify it to show tests passing if they failed.
+
+## 16. Run the Benchmark
+
+The benchmark module can be used to evaluate ingestion performance with a larger number of records.
+
+Example:
+
+```powershell
 python -m app.benchmark --records 100000 --page-size 1000 --out reports/benchmark.json
 ```
 
-The benchmark compares two customer lookup approaches:
+The benchmark output is saved to:
 
-1. Repeated SQL lookups.
-2. In-memory customer lookup.
+```text
+reports/benchmark.json
+```
 
-The output includes execution time, throughput, and measured speedup.
+The benchmark configuration can be adjusted to test different record counts and page sizes.
 
-This is a local lookup benchmark, not an end-to-end HTTP API performance benchmark.
+## 17. Database Verification
 
-## 13. Database and Query Inspection
+The SQLite database can be inspected to verify stored records.
 
-If the SQLite command-line utility is installed, inspect the database:
+If the SQLite command-line utility is installed, use:
 
-```bash
+```powershell
 sqlite3 data/ingestion.db ".tables"
 ```
 
-Inspect ingestion runs:
+View ingestion runs:
 
-```bash
+```powershell
 sqlite3 data/ingestion.db "SELECT * FROM runs;"
 ```
 
-Inspect current events:
+View event records:
 
-```bash
+```powershell
 sqlite3 data/ingestion.db "SELECT * FROM events LIMIT 10;"
 ```
 
-Inspect rejected records:
+View rejected records:
 
-```bash
+```powershell
 sqlite3 data/ingestion.db "SELECT * FROM rejects LIMIT 10;"
 ```
 
-Inspect event history:
+View event history:
 
-```bash
+```powershell
 sqlite3 data/ingestion.db "SELECT * FROM events_history LIMIT 10;"
 ```
 
-If SQLite CLI is not installed, use Python's built-in `sqlite3` module to inspect the database.
+These queries are intended for local inspection. The SQLite command-line utility is optional; the application itself uses Python's SQLite support.
 
-## 14. Reliability and Data Quality
+## 18. Error Handling and Reliability
 
-### Retry handling
+The ingestion workflow is designed to handle common API and data-processing problems.
 
-The API client is designed to handle temporary request failures and selected HTTP errors.
+The implementation includes mechanisms for:
 
-### Rate limits
+- Handling temporary network failures.
+- Retrying eligible HTTP errors.
+- Managing API rate limits.
+- Handling unsuccessful API responses.
+- Validating incoming data.
+- Separating rejected records from valid records.
+- Preventing duplicate data insertion.
+- Maintaining checkpoints for incremental processing.
+- Retaining raw responses for traceability.
 
-HTTP 429 responses are handled using the configured retry behavior.
+Authentication errors and other non-retryable failures should be handled separately from temporary server or network errors.
 
-### Data validation
+## 19. Idempotency and Incremental Ingestion
 
-Incoming data is checked before being stored. Invalid records are retained in the rejects table with their rejection reasons.
+Idempotency is important when an ingestion job is executed more than once.
 
-### Idempotency
+The project uses database-level storage logic to avoid creating duplicate records during repeated ingestion.
 
-Repeated delivery of an already processed event version should not create another identical history entry.
+Checkpoints are used to track ingestion progress and support incremental processing.
 
-### Late-arriving records
+This approach helps reduce unnecessary reprocessing and makes the workflow more reliable when jobs are restarted.
 
-Older event versions should not overwrite newer current records.
+## 20. Design Decisions and Trade-offs
 
-### Checkpoint recovery
+The project uses a modular structure to keep API communication, validation, storage, and reporting responsibilities separate.
 
-The checkpoint advances only after the complete ingestion run succeeds. This allows failed runs to be retried without advancing the ingestion position prematurely.
+Some key design considerations include:
 
-### Raw response traceability
-
-Original API response data is retained so records can be traced back to the source response.
-
-## 15. Supporting Documentation
-
-Additional technical details are available in:
-
-- [Database Data Dictionary](docs/DATA_DICTIONARY.md)
-- [Technical Design Notes](docs/DESIGN_NOTES.md)
-- [AI Prompt History and Disclosure](PROMPT_HISTORY.md)
-
-## 16. Sample Evidence
-
-The `evidence/` directory contains sample project outputs:
-
-| Evidence file | Description |
+| Decision | Reason |
 |---|---|
-| `test_results.txt` | Saved automated test output |
-| `sample_queries_output.txt` | Sample database query results |
-| `benchmark.json` | Benchmark output |
-| `sample_reconciliation_report.json` | Machine-readable reconciliation report |
-| `sample_reconciliation_report.md` | Human-readable reconciliation report |
+| SQLite | Provides lightweight persistent storage without requiring a separate database server |
+| Mock API | Allows local execution and testing without depending on an external service |
+| Pagination | Supports processing records in manageable batches |
+| Retry handling | Helps recover from temporary API failures |
+| Raw response retention | Supports traceability and troubleshooting |
+| Checkpoints | Support incremental ingestion |
+| Validation | Prevents invalid records from entering the main data tables |
+| Reconciliation reports | Help compare expected and ingested data |
 
-These files are included to help reviewers understand the project's validation and reporting approach. Re-run the commands above to reproduce the results locally.
+More detailed implementation decisions and trade-offs are documented in [DESIGN_NOTES.md](docs/DESIGN_NOTES.md).
 
-## 17. Design Decisions
+## 21. Evidence and Results
 
-The project uses a lightweight local architecture:
+The `evidence/` directory contains supporting files related to the project.
 
-- Python keeps the implementation straightforward and accessible.
-- FastAPI provides a controllable mock API.
-- SQLite provides persistent local storage without a separate database server.
-- Raw response retention supports traceability.
-- Page-level database transactions help prevent partially committed pages.
-- Checkpoints support incremental processing.
-- Idempotent event-version handling supports safe reruns.
-- Automated tests help verify core behavior.
+```text
+evidence/
+├── benchmark.json
+├── sample_queries_output.txt
+├── sample_reconciliation_report.json
+├── sample_reconciliation_report.md
+└── test_results.txt
+```
 
-More detailed decisions and trade-offs are documented in [DESIGN_NOTES.md](docs/DESIGN_NOTES.md).
+These files provide examples of benchmark output, database queries, reconciliation reports, and test execution results.
 
-## 18. Limitations and Future Improvements
+For accurate evaluation, the evidence should correspond to actual application runs.
 
-This project is a locally runnable demonstration, not a complete production deployment.
+## 22. Known Limitations and Future Improvements
 
-Possible improvements include:
+The current implementation is intended as a local API ingestion project.
 
-- Integration with a real third-party API.
-- Production-grade secret management.
-- PostgreSQL support.
-- Structured centralized logging and monitoring.
-- Scheduled ingestion and orchestration.
-- Continuous integration.
-- Larger-scale load and recovery testing.
-- Containerized deployment.
+Possible future improvements include:
 
-The local demo token and mock API are for development and testing only.
+- Supporting additional external API integrations.
+- Adding structured application logging.
+- Improving monitoring and alerting.
+- Supporting PostgreSQL for larger workloads.
+- Adding configurable ingestion schedules.
+- Improving parallel processing where appropriate.
+- Adding automated CI workflows.
+- Expanding integration and failure-recovery tests.
 
-## 19. AI Usage Disclosure
+These are potential improvements rather than claims about features already implemented.
 
-The recruitment assignment requires transparent disclosure of AI assistance.
+## 23. Repository and Project Files
 
-The prompt history and AI-use explanation are maintained in [PROMPT_HISTORY.md](PROMPT_HISTORY.md).
+| File | Description |
+|---|---|
+| `README.md` | Project overview and setup instructions |
+| `PROMPT_HISTORY.md` | Development prompt history and assistance disclosure |
+| `docs/DATA_DICTIONARY.md` | Database documentation |
+| `docs/DESIGN_NOTES.md` | Design decisions and technical trade-offs |
+| `requirements.txt` | Python dependencies |
+| `pytest.ini` | Pytest configuration |
+| `.env.example` | Example application configuration |
+| `.gitignore` | Files excluded from version control |
 
-That document should contain the actual prompts used, identify the AI tools involved, and explain which parts were generated or improved with assistance and what was personally reviewed and validated.
+## 24. Running the Project – Quick Reference
 
-Do not claim that no AI tools were used if an AI tool assisted with the project or its documentation.
+After completing the installation and configuration steps, the main workflow is:
 
-## 20. How to Reproduce the Project
+**Terminal 1 – Start the API**
 
-For a complete local verification:
+```powershell
+python -m app.mock_api serve --host 127.0.0.1 --port 8000
+```
 
-1. Clone the public GitHub repository.
-2. Create and activate the Python virtual environment.
-3. Install dependencies from `requirements.txt`.
-4. Set the local environment variables.
-5. Start the FastAPI mock server.
-6. Check the health endpoint.
-7. Generate expected labels.
-8. Run the automated tests.
-9. Run the ingestion pipeline.
-10. Generate the reconciliation report.
-11. Run the benchmark.
-12. Inspect the SQLite database and generated reports.
+**Terminal 2 – Run the project**
 
-## 21. Project Submission
+```powershell
+python -m app.mock_api labels --count 250 --out data/expected_labels.json
 
-**Project:** YottaFlex API Data Ingestion Pipeline
+python -m app.pipeline
 
-**Candidate:** Sanket Pawar
+python -m app.report --db data/ingestion.db --labels data/expected_labels.json
 
-**GitHub Repository:**
+python -m pytest -v
+```
 
-https://github.com/Sanketpawar7705/yottaflex_api_data_ingestion
+For a benchmark run:
 
-The repository provides the implementation, installation and execution instructions, technical documentation, test files, sample evidence, and AI-use disclosure required for review.
+```powershell
+python -m app.benchmark --records 100000 --page-size 1000 --out reports/benchmark.json
+```
+
+## 25. Author
+
+**Sanket Pawar**
+
+GitHub: [Sanketpawar7705](https://github.com/Sanketpawar7705)
+
+Project: [YottaFlex API Data Ingestion Pipeline](https://github.com/Sanketpawar7705/yottaflex_api_data_ingestion)
 
 ---
 
-<p align="center">
-  <strong>Built as an individual candidate project for the YottaFlex AI Recruitment Drive.</strong>
-</p>
+**Note:** This repository is intended to demonstrate API integration, data ingestion, validation, database storage, and reconciliation concepts through a locally executable Python application.
